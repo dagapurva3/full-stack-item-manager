@@ -79,7 +79,7 @@ full-stack-item-manager/
 - `GET /api/items/{id}/` - Get a specific item
 - `PATCH /api/items/{id}/` - Update an existing item
 
-## Enhanced API Response
+## API Response
 
 ```json
 {
@@ -233,7 +233,7 @@ full-stack-item-manager/
 - Quantity must be a positive integer
 - Tags are stored as comma-separated values and displayed as badges
 
-## Enhanced UI Features
+## UI Features
 
 ### Color-Coded Badges
 - **Status**: Green (Active), Gray (Inactive), Red (Archived)
@@ -319,15 +319,3 @@ curl -X POST http://localhost:8000/api/items/ \
 - Required field validation
 - Data type validation (price as decimal, quantity as integer)
 - Status and priority constraint validation
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-This project is open source and available under the MIT License.
