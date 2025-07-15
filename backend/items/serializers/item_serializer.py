@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Item, ItemGroup, ItemStatus, ItemPriority
+from ..models import Item
+from ..enums import ItemGroup, ItemStatus, ItemPriority
 
 
 class ItemSerializer(serializers.ModelSerializer):

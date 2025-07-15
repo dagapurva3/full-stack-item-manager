@@ -12,6 +12,7 @@ from .constants import (
     FIELD_DESCRIPTIONS,
     VALIDATION_MESSAGES,
 )
+from .services import item_service
 
 
 @api_view(["GET"])
@@ -37,16 +38,14 @@ def item_list(request):
     List all items or create a new item.
     """
     if request.method == "GET":
-        items = Item.objects.all()
-        serializer = ItemSerializer(items, many=True)
-        return Response(serializer.data)
+        data = item_service.list_items()
+        return Response(data)
 
     elif request.method == "POST":
-        serializer = ItemSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data, status_code, errors = item_service.create_item(request.data)
+        if status_code == status.HTTP_201_CREATED:
+            return Response(data, status=status_code)
+        return Response(errors, status=status_code)
 
 
 @api_view(["GET", "PATCH"])
@@ -55,20 +54,19 @@ def item_detail(request, pk):
     Retrieve or update a specific item.
     """
     try:
-        item = get_object_or_404(Item, pk=pk)
+        get_object_or_404(Item, pk=pk)
     except Item.DoesNotExist:
         return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        serializer = ItemSerializer(item)
-        return Response(serializer.data)
+        data = item_service.get_item(pk)
+        return Response(data)
 
     elif request.method == "PATCH":
-        serializer = ItemSerializer(item, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data, status_code, errors = item_service.update_item(pk, request.data)
+        if status_code == status.HTTP_200_OK:
+            return Response(data)
+        return Response(errors, status=status_code)
 
 
 @api_view(["GET"])
@@ -82,9 +80,8 @@ def items_by_status(request, status_value):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    items = Item.get_by_status(status_value)
-    serializer = ItemSerializer(items, many=True)
-    return Response(serializer.data)
+    data = item_service.get_items_by_status(status_value)
+    return Response(data)
 
 
 @api_view(["GET"])
@@ -98,9 +95,8 @@ def items_by_priority(request, priority_value):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    items = Item.get_by_priority(priority_value)
-    serializer = ItemSerializer(items, many=True)
-    return Response(serializer.data)
+    data = item_service.get_items_by_priority(priority_value)
+    return Response(data)
 
 
 @api_view(["GET"])
@@ -108,9 +104,8 @@ def urgent_items(request):
     """
     Get all urgent items.
     """
-    items = Item.get_urgent_items()
-    serializer = ItemSerializer(items, many=True)
-    return Response(serializer.data)
+    data = item_service.get_urgent_items()
+    return Response(data)
 
 
 @api_view(["GET"])
@@ -118,6 +113,5 @@ def active_items(request):
     """
     Get all active items.
     """
-    items = Item.get_active_items()
-    serializer = ItemSerializer(items, many=True)
-    return Response(serializer.data)
+    data = item_service.get_active_items()
+    return Response(data)

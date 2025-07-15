@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon, EditIcon } from '@chakra-ui/icons';
-import { itemService } from '../services/api';
+import useItems from '../hooks/useItems';
 
 const ItemDetail = () => {
   const [item, setItem] = useState(null);
@@ -26,30 +26,26 @@ const ItemDetail = () => {
   const { id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
+  const { items } = useItems();
 
-  // Move fetchItem above useEffect
-  const fetchItem = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await itemService.getItem(id);
-      setItem(data);
-    } catch (error) {
+  // Find the item by ID from the items array
+  useEffect(() => {
+    const foundItem = items.find(item => item.id === parseInt(id));
+    if (foundItem) {
+      setItem(foundItem);
+      setLoading(false);
+    } else {
+      setLoading(false);
       toast({
         title: 'Error',
-        description: 'Failed to fetch item details',
+        description: 'Item not found',
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
       navigate('/');
-    } finally {
-      setLoading(false);
     }
-  }, [id, toast, navigate]);
-
-  useEffect(() => {
-    fetchItem();
-  }, [fetchItem]);
+  }, [id, items, toast, navigate]);
 
   const getPriorityColor = (priority) => {
     switch (priority) {

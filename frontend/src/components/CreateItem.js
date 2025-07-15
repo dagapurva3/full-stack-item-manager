@@ -23,7 +23,7 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { itemService } from '../services/api';
+import useItems from '../hooks/useItems';
 
 const CreateItem = () => {
   const [formData, setFormData] = useState({
@@ -40,6 +40,7 @@ const CreateItem = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
+  const { createItem } = useItems();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,7 +80,7 @@ const CreateItem = () => {
 
     try {
       setLoading(true);
-      await itemService.createItem(submitData);
+      await createItem(submitData);
       toast({
         title: 'Success',
         description: 'Item created successfully',

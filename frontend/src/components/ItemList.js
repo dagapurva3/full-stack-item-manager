@@ -19,33 +19,14 @@ import {
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { EditIcon, ViewIcon } from '@chakra-ui/icons';
-import { itemService } from '../services/api';
+import useItems from '../hooks/useItems';
 
 const ItemList = () => {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const toast = useToast();
 
-  // Move fetchItems above useEffect
-  const fetchItems = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await itemService.getAllItems();
-      setItems(data);
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to fetch items',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [toast]);
+  const { items, loading, fetchItems, setItems } = useItems();
 
   useEffect(() => {
     fetchItems();

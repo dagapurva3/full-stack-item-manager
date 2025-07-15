@@ -3,7 +3,7 @@ Constants for the Items app.
 This module centralizes all enum values and choices for better maintainability.
 """
 
-from .models import ItemGroup, ItemStatus, ItemPriority
+from .enums import ItemGroup, ItemStatus, ItemPriority
 
 # Enum values for API documentation and frontend use
 ITEM_GROUPS = ItemGroup.values()

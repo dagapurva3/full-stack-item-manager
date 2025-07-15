@@ -1,48 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from enum import Enum
-
-
-class ItemGroup(Enum):
-    PRIMARY = "Primary"
-    SECONDARY = "Secondary"
-
-    @classmethod
-    def choices(cls):
-        return [(member.value, member.value) for member in cls]
-
-    @classmethod
-    def values(cls):
-        return [member.value for member in cls]
-
-
-class ItemStatus(Enum):
-    ACTIVE = "active"
-    INACTIVE = "inactive"
-    ARCHIVED = "archived"
-
-    @classmethod
-    def choices(cls):
-        return [(member.value, member.value.title()) for member in cls]
-
-    @classmethod
-    def values(cls):
-        return [member.value for member in cls]
-
-
-class ItemPriority(Enum):
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
-    URGENT = "urgent"
-
-    @classmethod
-    def choices(cls):
-        return [(member.value, member.value.title()) for member in cls]
-
-    @classmethod
-    def values(cls):
-        return [member.value for member in cls]
+from .enums import ItemGroup, ItemStatus, ItemPriority
+from .utils.validators import validate_enum_value, validate_unique_name_within_group
 
 
 class Item(models.Model):
@@ -73,31 +32,11 @@ class Item(models.Model):
         verbose_name_plural = "Items"
 
     def clean(self):
-        # Check for unique name within the same group
-        if (
-            Item.objects.filter(name=self.name, group=self.group)
-            .exclude(pk=self.pk)
-            .exists()
-        ):
-            raise ValidationError(
-                f"An item with name '{self.name}' already exists in the {self.group} group."
-            )
-
-        # Validate enum values
-        if self.group not in ItemGroup.values():
-            raise ValidationError(
-                f"Invalid group value. Must be one of: {ItemGroup.values()}"
-            )
-
-        if self.status not in ItemStatus.values():
-            raise ValidationError(
-                f"Invalid status value. Must be one of: {ItemStatus.values()}"
-            )
-
-        if self.priority not in ItemPriority.values():
-            raise ValidationError(
-                f"Invalid priority value. Must be one of: {ItemPriority.values()}"
-            )
+        """Validate the item instance for unique name and valid enum values."""
+        validate_unique_name_within_group(Item, self.name, self.group, self.pk)
+        validate_enum_value(self.group, ItemGroup.values(), "group")
+        validate_enum_value(self.status, ItemStatus.values(), "status")
+        validate_enum_value(self.priority, ItemPriority.values(), "priority")
 
     def save(self, *args, **kwargs):
         self.full_clean()

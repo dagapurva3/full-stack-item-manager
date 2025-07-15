@@ -25,7 +25,7 @@ import {
 } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { itemService } from '../services/api';
+import useItems from '../hooks/useItems';
 
 const EditItem = () => {
   const [formData, setFormData] = useState({
@@ -44,6 +44,7 @@ const EditItem = () => {
   const { id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
+  const { updateItem } = useItems();
 
   // Move fetchItem above useEffect
   const fetchItem = useCallback(async () => {
@@ -117,7 +118,7 @@ const EditItem = () => {
 
     try {
       setSubmitting(true);
-      await itemService.updateItem(id, submitData);
+      await updateItem(id, submitData);
       toast({
         title: 'Success',
         description: 'Item updated successfully',
