@@ -120,7 +120,7 @@ const ItemList = () => {
       ) : (
         <Grid templateColumns="repeat(auto-fill, minmax(350px, 1fr))" gap={6}>
           {filteredItems.map((item) => (
-            <Card key={item.id} shadow="md" _hover={{ shadow: 'lg' }}>
+            <Card key={item.id} shadow="md" _hover={{ shadow: 'lg' }} h="full" display="flex" flexDirection="column">
               <CardHeader>
                 <VStack align="start" spacing={2}>
                   <Flex justify="space-between" align="center" w="full">
@@ -146,8 +146,8 @@ const ItemList = () => {
                   )}
                 </VStack>
               </CardHeader>
-              <CardBody>
-                <VStack spacing={3} align="start">
+              <CardBody flex="1" display="flex" flexDirection="column">
+                <VStack spacing={3} align="start" flex="1">
                   <HStack spacing={4} w="full">
                     {item.price && (
                       <Text fontSize="sm" fontWeight="medium">
@@ -175,35 +175,35 @@ const ItemList = () => {
                     </HStack>
                   )}
                   
-                  <Text fontSize="xs" color="gray.500">
+                  <Text fontSize="xs" color="gray.500" mt="auto">
                     Created: {new Date(item.created_at).toLocaleDateString()}
                   </Text>
-                  
-                  <Flex gap={2} w="full">
-                    <Button
-                      as={RouterLink}
-                      to={`/item/${item.id}`}
-                      leftIcon={<ViewIcon />}
-                      size="sm"
-                      colorScheme="blue"
-                      variant="outline"
-                      flex={1}
-                    >
-                      View
-                    </Button>
-                    <Button
-                      as={RouterLink}
-                      to={`/item/${item.id}/edit`}
-                      leftIcon={<EditIcon />}
-                      size="sm"
-                      colorScheme="green"
-                      variant="outline"
-                      flex={1}
-                    >
-                      Edit
-                    </Button>
-                  </Flex>
                 </VStack>
+                
+                <Flex gap={2} w="full" mt={4}>
+                  <Button
+                    as={RouterLink}
+                    to={`/item/${item.id}`}
+                    leftIcon={<ViewIcon />}
+                    size="sm"
+                    colorScheme="blue"
+                    variant="outline"
+                    flex={1}
+                  >
+                    View
+                  </Button>
+                  <Button
+                    as={RouterLink}
+                    to={`/item/${item.id}/edit`}
+                    leftIcon={<EditIcon />}
+                    size="sm"
+                    colorScheme="green"
+                    variant="outline"
+                    flex={1}
+                  >
+                    Edit
+                  </Button>
+                </Flex>
               </CardBody>
             </Card>
           ))}
