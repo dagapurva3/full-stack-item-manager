@@ -26,6 +26,7 @@ import {
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import useItems from '../hooks/useItems';
+import * as itemApi from '../services/itemApi';
 
 const EditItem = () => {
   const [formData, setFormData] = useState({
@@ -46,11 +47,11 @@ const EditItem = () => {
   const navigate = useNavigate();
   const { updateItem } = useItems();
 
-  // Move fetchItem above useEffect
   const fetchItem = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await itemService.getItem(id);
+      const res = await itemApi.fetchItem(id);
+      const data = res.data;
       setFormData({
         name: data.name,
         description: data.description || '',
@@ -109,7 +110,6 @@ const EditItem = () => {
       return;
     }
 
-    // Convert price to number if provided
     const submitData = {
       ...formData,
       price: formData.price ? parseFloat(formData.price) : null,
@@ -172,7 +172,6 @@ const EditItem = () => {
         <CardBody>
           <form onSubmit={handleSubmit}>
             <VStack spacing={6}>
-              {/* Basic Information */}
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} w="full">
                 <FormControl isRequired>
                   <FormLabel>Item Name</FormLabel>
@@ -208,7 +207,6 @@ const EditItem = () => {
                 />
               </FormControl>
 
-              {/* Status and Priority */}
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} w="full">
                 <FormControl isRequired>
                   <FormLabel>Status</FormLabel>
@@ -238,7 +236,6 @@ const EditItem = () => {
                 </FormControl>
               </SimpleGrid>
 
-              {/* Price and Quantity */}
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} w="full">
                 <FormControl>
                   <FormLabel>Price</FormLabel>
@@ -272,7 +269,6 @@ const EditItem = () => {
                 </FormControl>
               </SimpleGrid>
 
-              {/* Location and Tags */}
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} w="full">
                 <FormControl>
                   <FormLabel>Location</FormLabel>
@@ -313,4 +309,4 @@ const EditItem = () => {
   );
 };
 
-export default EditItem; 
+export default EditItem;

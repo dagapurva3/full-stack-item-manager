@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 
 export default function useItems() {
@@ -7,7 +7,7 @@ export default function useItems() {
   const [error, setError] = useState(null);
 
   // Fetch all items
-  const fetchItems = async () => {
+  const fetchItems = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -18,7 +18,7 @@ export default function useItems() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // Create a new item
   const createItem = async (itemData) => {
@@ -55,7 +55,7 @@ export default function useItems() {
   // Fetch items on mount
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [fetchItems]);
 
   return {
     items,
@@ -66,4 +66,4 @@ export default function useItems() {
     updateItem,
     setItems, // for manual updates if needed
   };
-} 
+}

@@ -19,6 +19,7 @@ import {
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon, EditIcon } from '@chakra-ui/icons';
 import useItems from '../hooks/useItems';
+import * as itemApi from '../services/itemApi';
 
 const ItemDetail = () => {
   const [item, setItem] = useState(null);
@@ -28,22 +29,33 @@ const ItemDetail = () => {
   const navigate = useNavigate();
   const { items } = useItems();
 
-  // Find the item by ID from the items array
+  // Find the item by ID from the items array or fetch from backend
   useEffect(() => {
     const foundItem = items.find(item => item.id === parseInt(id));
     if (foundItem) {
       setItem(foundItem);
       setLoading(false);
     } else {
-      setLoading(false);
-      toast({
-        title: 'Error',
-        description: 'Item not found',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-      navigate('/');
+      // Fetch from backend if not found in local state
+      const fetchItem = async () => {
+        try {
+          setLoading(true);
+          const res = await itemApi.fetchItem(id);
+          setItem(res.data);
+        } catch (error) {
+          toast({
+            title: 'Error',
+            description: 'Item not found',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+          navigate('/');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchItem();
     }
   }, [id, items, toast, navigate]);
 
@@ -269,4 +281,4 @@ const ItemDetail = () => {
   );
 };
 
-export default ItemDetail; 
+export default ItemDetail;
