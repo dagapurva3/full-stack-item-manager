@@ -1,27 +1,55 @@
 # Full-Stack Item Manager
 
-A complete full-stack application built with Django REST API and React frontend for managing items with CRUD operations.
+A complete full-stack application built with Django REST API and React frontend for managing items with comprehensive CRUD operations and advanced features.
 
 ## Features
 
 - **Backend (Django REST API)**
   - RESTful API endpoints for CRUD operations
-  - Item model with name, group, and timestamps
+  - Enhanced Item model with comprehensive fields
   - Unique name validation within groups (Primary/Secondary)
   - Proper error handling and HTTP status codes
   - CORS configuration for frontend communication
+  - Advanced filtering and search capabilities
 
 - **Frontend (React + Chakra UI)**
   - Modern, responsive UI with Chakra UI
   - Complete CRUD operations interface
-  - Item filtering by group
+  - Advanced filtering by group and status
+  - Enhanced item cards with rich information display
   - Form validation and error handling
-  - Beautiful card-based layout
+  - Beautiful card-based layout with color-coded badges
+  - Number inputs for price and quantity
+  - Tag management with visual badges
 
 - **Docker Support**
   - Containerized backend and frontend
   - Docker Compose for easy development setup
   - Production-ready configuration
+
+## Enhanced Item Model
+
+The application now supports a comprehensive item model with the following fields:
+
+### Core Fields
+- **`name`** - Item name (required, unique within group)
+- **`group`** - Item group (Primary/Secondary)
+- **`description`** - Detailed item description
+- **`status`** - Item status (Active/Inactive/Archived)
+- **`priority`** - Priority level (Low/Medium/High/Urgent)
+
+### Additional Fields
+- **`price`** - Item price (decimal with 2 decimal places)
+- **`quantity`** - Stock quantity (positive integer)
+- **`location`** - Item location or storage area
+- **`tags`** - Comma-separated tags for categorization
+- **`created_at`** - Creation timestamp (auto-generated)
+- **`updated_at`** - Last update timestamp (auto-generated)
+
+### Computed Properties
+- **`tag_list`** - Returns tags as a list
+- **`is_urgent`** - Checks if priority is urgent
+- **`is_active`** - Checks if status is active
 
 ## Project Structure
 
@@ -50,6 +78,28 @@ full-stack-item-manager/
 - `POST /api/items/` - Create a new item
 - `GET /api/items/{id}/` - Get a specific item
 - `PATCH /api/items/{id}/` - Update an existing item
+
+## Enhanced API Response
+
+```json
+{
+  "id": 1,
+  "name": "Sample Item",
+  "description": "A detailed description of the item",
+  "group": "Primary",
+  "status": "active",
+  "priority": "high",
+  "price": "29.99",
+  "quantity": 5,
+  "location": "Warehouse A, Shelf 3",
+  "tags": "electronics, gadgets, new",
+  "tag_list": ["electronics", "gadgets", "new"],
+  "is_urgent": false,
+  "is_active": true,
+  "created_at": "2024-01-01T12:00:00Z",
+  "updated_at": "2024-01-01T12:00:00Z"
+}
+```
 
 ## Quick Start with Docker
 
@@ -144,23 +194,63 @@ full-stack-item-manager/
 
 ### Creating Items
 1. Click "Add Item" button in the header
-2. Fill in the item name and select a group (Primary or Secondary)
-3. Submit the form
+2. Fill in the required fields:
+   - **Name** (required)
+   - **Group** (Primary or Secondary)
+   - **Status** (Active, Inactive, or Archived)
+   - **Priority** (Low, Medium, High, or Urgent)
+3. Optionally add:
+   - **Description** for detailed information
+   - **Price** for item cost
+   - **Quantity** for stock count
+   - **Location** for storage area
+   - **Tags** for categorization (comma-separated)
+4. Submit the form
 
 ### Viewing Items
-- All items are displayed on the home page
-- Use the filter dropdown to view items by group
-- Click "View" to see detailed information
+- All items are displayed on the home page with enhanced cards
+- Use the **Group filter** to view items by Primary/Secondary
+- Use the **Status filter** to view items by Active/Inactive/Archived
+- Each item card shows:
+  - Item name and description
+  - Color-coded status and priority badges
+  - Price and quantity information
+  - Location with emoji icon
+  - Tags as purple badges
+  - Creation date
 
 ### Editing Items
 1. Click "Edit" on any item card
-2. Modify the name or group
+2. Modify any field as needed
 3. Submit the changes
 
 ### Item Rules
 - Each group (Primary/Secondary) can only contain unique item names
 - The same name can exist in both groups
 - Items are automatically timestamped when created and updated
+- Status and priority have predefined options
+- Price supports decimal values with 2 decimal places
+- Quantity must be a positive integer
+- Tags are stored as comma-separated values and displayed as badges
+
+## Enhanced UI Features
+
+### Color-Coded Badges
+- **Status**: Green (Active), Gray (Inactive), Red (Archived)
+- **Priority**: Red (Urgent), Orange (High), Yellow (Medium), Green (Low)
+- **Group**: Blue (Primary), Green (Secondary)
+- **Tags**: Purple badges
+
+### Advanced Filtering
+- Filter by **Group** (All, Primary, Secondary)
+- Filter by **Status** (All, Active, Inactive, Archived)
+- Combined filtering for precise item selection
+
+### Responsive Design
+- Mobile-friendly interface
+- Responsive grid layout
+- Adaptive form layouts
+- Touch-friendly controls
 
 ## Technology Stack
 
@@ -201,11 +291,34 @@ Use tools like Postman or curl to test API endpoints:
 # List all items
 curl http://localhost:8000/api/items/
 
-# Create an item
+# Create an item with all fields
 curl -X POST http://localhost:8000/api/items/ \
   -H "Content-Type: application/json" \
-  -d '{"name": "Test Item", "group": "Primary"}'
+  -d '{
+    "name": "Test Item",
+    "description": "A test item with full details",
+    "group": "Primary",
+    "status": "active",
+    "priority": "high",
+    "price": "29.99",
+    "quantity": 5,
+    "location": "Warehouse A",
+    "tags": "test, sample, new"
+  }'
 ```
+
+## Security Features
+
+### Environment Variables
+- **SECRET_KEY** - Django cryptographic secret for security operations
+- **DEBUG** - Development/production mode toggle
+- **CORS settings** - Cross-origin request handling
+
+### Data Validation
+- Unique name validation within groups
+- Required field validation
+- Data type validation (price as decimal, quantity as integer)
+- Status and priority constraint validation
 
 ## Contributing
 
