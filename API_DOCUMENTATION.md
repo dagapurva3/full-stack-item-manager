@@ -181,82 +181,6 @@ Updates an existing item.
 }
 ```
 
-### 6. Get Items by Status
-**GET** `/items/status/{status_value}/`
-
-Returns items filtered by status.
-
-**Parameters:**
-- `status_value`: One of "active", "inactive", "archived"
-
-**Response:**
-```json
-[
-  {
-    "id": 1,
-    "name": "Active Item",
-    "status": "active",
-    // ... other fields
-  }
-]
-```
-
-### 7. Get Items by Priority
-**GET** `/items/priority/{priority_value}/`
-
-Returns items filtered by priority.
-
-**Parameters:**
-- `priority_value`: One of "low", "medium", "high", "urgent"
-
-**Response:**
-```json
-[
-  {
-    "id": 2,
-    "name": "Urgent Item",
-    "priority": "urgent",
-    // ... other fields
-  }
-]
-```
-
-### 8. Get Urgent Items
-**GET** `/items/urgent/`
-
-Returns all items with urgent priority.
-
-**Response:**
-```json
-[
-  {
-    "id": 2,
-    "name": "Urgent Item",
-    "priority": "urgent",
-    "is_urgent": true,
-    // ... other fields
-  }
-]
-```
-
-### 9. Get Active Items
-**GET** `/items/active/`
-
-Returns all items with active status.
-
-**Response:**
-```json
-[
-  {
-    "id": 1,
-    "name": "Active Item",
-    "status": "active",
-    "is_active": true,
-    // ... other fields
-  }
-]
-```
-
 ## Error Responses
 
 ### 400 Bad Request
@@ -360,16 +284,4 @@ curl http://localhost:8000/api/items/1/
 curl -X PATCH http://localhost:8000/api/items/1/ \
   -H "Content-Type: application/json" \
   -d '{"name": "Updated Item", "status": "inactive"}'
-
-# Get items by status
-curl http://localhost:8000/api/items/status/active/
-
-# Get items by priority
-curl http://localhost:8000/api/items/priority/urgent/
-
-# Get urgent items
-curl http://localhost:8000/api/items/urgent/
-
-# Get active items
-curl http://localhost:8000/api/items/active/
 ``` 

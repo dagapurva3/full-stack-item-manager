@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Item, ItemGroup, ItemStatus, ItemPriority
+
+from .models import Item, ItemGroup, ItemPriority, ItemStatus
 
 
 @admin.register(Item)

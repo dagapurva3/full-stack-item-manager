@@ -3,7 +3,8 @@
 Base service class for shared service logic.
 Extend this for model-specific services.
 """
-from typing import Type, Any
+from typing import Any, Type
+
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response

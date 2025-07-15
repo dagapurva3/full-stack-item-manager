@@ -1,6 +1,7 @@
-from django.db import models
 from django.core.exceptions import ValidationError
-from .enums import ItemGroup, ItemStatus, ItemPriority
+from django.db import models
+
+from .enums import ItemGroup, ItemPriority, ItemStatus
 from .utils.validators import validate_enum_value, validate_unique_name_within_group
 
 
